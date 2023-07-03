@@ -1,7 +1,22 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 
 const Navbar = () => {
+  const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setAuth({
+      ...auth,
+      user: null,
+      token: "",
+    });
+    localStorage.removeItem("auth");
+    toast.success("Logout Successfully");
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -31,16 +46,33 @@ const Navbar = () => {
                 Home
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/login" className="nav-link" href="#">
-                Login
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/register" className="nav-link" href="#">
-                Register
-              </NavLink>
-            </li>
+            {!auth?.user ? (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/login" className="nav-link" href="#">
+                    Login
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/register" className="nav-link" href="#">
+                    Register
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink onClick={handleLogout} className="nav-link" href="#">
+                    Logout
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/register" className="nav-link" href="#">
+                    {auth?.user?.name}
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

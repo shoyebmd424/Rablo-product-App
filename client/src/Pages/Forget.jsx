@@ -6,7 +6,7 @@ import Axios from "../Axios";
 
 const Forget = () => {
   const [username, setusername] = useState("");
-  const [newpassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [answer, setAnswer] = useState("");
 
   const navigate = useNavigate();
@@ -17,12 +17,11 @@ const Forget = () => {
     try {
       const res = await Axios.post("/auth/forget", {
         username,
-        newpassword,
         answer,
+        newPassword,
       });
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
-
         navigate("/login");
       } else {
         toast.error(res.data.message);
@@ -64,7 +63,7 @@ const Forget = () => {
             <div className="mb-3">
               <input
                 type="password"
-                value={newpassword}
+                value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="form-control"
                 id="exampleInputPassword1"

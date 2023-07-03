@@ -4,15 +4,13 @@ export const saveProduct = async (req, res) => {
     console.log(req.body);
     const product = new productSchema(req.body);
     await product.save();
-    res.status(200).send({
+    res.send({
       success: true,
       message: "New Product successfully saved ....!",
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(200)
-      .send({ success: false, message: "Something went wrong....!" });
+    res.send({ success: false, message: "Something went wrong....!" });
   }
 };
 // update product
@@ -25,28 +23,26 @@ export const updateProduct = async (req, res) => {
         new: true,
       }
     );
-    res
-      .status(200)
-      .send({ success: true, message: "Product have updated successfully..." });
+    res.send({
+      success: true,
+      message: "Product have updated successfully...",
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .send({ success: false, message: "Something went wrong.....!" });
+    res.send({ success: false, message: "Something went wrong.....!" });
   }
 };
 // delete product
 export const deleteProduct = async (req, res) => {
   try {
     await productSchema.findByIdAndDelete(req.params.id);
-    res
-      .status(200)
-      .send({ success: true, message: "Product have Deleted successfully..." });
+    res.send({
+      success: true,
+      message: "Product have Deleted successfully...",
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .send({ success: false, message: "Something went wrong.....!" });
+    res.send({ success: false, message: "Something went wrong.....!" });
   }
 };
 
@@ -59,10 +55,8 @@ export const getAllProduct = async (req, res) => {
       price: { $lt: pmax || 999999 },
       rating: { $gt: rmin || 1 },
     });
-    res.status(200).send({ success: true, message: products });
+    res.send({ success: true, message: products });
   } catch (error) {
-    res
-      .status(500)
-      .send({ success: false, message: "Something went wrong.....!" });
+    res.send({ success: false, message: "Something went wrong.....!" });
   }
 };

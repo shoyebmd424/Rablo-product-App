@@ -11,11 +11,9 @@ export const register = async (req, res) => {
       password: hash,
     });
     await user.save();
-    res
-      .status(200)
-      .send({ success: true, message: "user register successfully" });
+    res.send({ success: true, message: "user register successfully" });
   } catch (error) {
-    res.status(500).send({
+    res.send({
       success: false,
       message: "Something went wrong pleae try again",
     });
@@ -28,14 +26,14 @@ export const login = async (req, res) => {
     //check user
     const user = await UserSchame.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(404).send({
+      return res.send({
         success: false,
-        message: "User is not registerd",
+        message: "User is not registered",
       });
     }
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
-      return res.status(400).send({
+      return res.send({
         success: false,
         message: "Invalid Password",
       });
@@ -44,7 +42,7 @@ export const login = async (req, res) => {
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-    res.status(200).send({
+    res.send({
       success: true,
       message: "login successfully",
       user: {
@@ -56,7 +54,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    res.send({
       success: false,
       message: "Error in login",
       error,
@@ -69,18 +67,20 @@ export const forgotpassword = async (req, res) => {
   const { username, answer, newPassword } = req.body;
   const salt = bcrypt.genSaltSync(10);
   const hashed = bcrypt.hashSync(newPassword, salt);
+  console.log(newPassword);
   try {
     //check
     const user = await UserSchame.findOne({ username, answer });
+    console.log(user);
     //validation
     if (!user) {
-      return res.status(404).send({
+      return res.send({
         success: false,
         message: "Wrong Email Or Answer",
       });
     }
     await UserSchame.findByIdAndUpdate(user._id, { password: hashed });
-    res.status(200).send({
+    res.send({
       success: true,
       message: "Password Reset Successfully",
     });
