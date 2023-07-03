@@ -19,6 +19,7 @@ const Login = () => {
         username,
         password,
       });
+      console.log(res);
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
         setAuth({
@@ -29,6 +30,7 @@ const Login = () => {
         localStorage.setItem("auth", JSON.stringify(res.data));
         navigate(location.state || "/dashboard");
       } else {
+        console.log(res.data.message);
         toast.error(res.data.message);
       }
     } catch (error) {
