@@ -19,8 +19,8 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <NavLink className="navbar-brand" href="#">
+      <div className="container-fluid " style={{ fontWeight: "bold" }}>
+        <NavLink to="/" className="navbar-brand" href="#">
           Rablo.i
         </NavLink>
         <button

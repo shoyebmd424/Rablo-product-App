@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import axios from "../Axios";
 import { useAuth } from "../Context/AuthContext";
+import Redirect from "./Redirect";
 
 export default function ProtectedRoutes() {
   const [ok, setOk] = useState(false);
@@ -19,5 +20,5 @@ export default function ProtectedRoutes() {
     if (auth?.token) authCheck();
   }, [auth?.token]);
 
-  return ok ? <Outlet /> : "Loading";
+  return ok ? <Outlet /> : <Redirect />;
 }

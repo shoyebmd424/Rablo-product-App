@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../Components/Layout";
 import useFatch from "../Hooks/UseFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -11,9 +12,7 @@ const Dashboard = () => {
   const [featured, setFeatured] = useState(false);
   const [list, setlist] = useState([]);
   // const navigate = useNavigate();
-  const { data } = useFatch(
-    `product/?featured=${featured}&rmin=${min || 0}&pmax=${max || 99999}`
-  );
+  const { data } = useFatch(`product/?&rmin=${min || 0}&pmax=${max || 99999}`);
 
   // Delete
   const handleDelete = async (id) => {
@@ -24,10 +23,31 @@ const Dashboard = () => {
       toast.error("something went wrong");
     }
   };
-  useEffect(() => {
-    setlist(data);
-  }, [data]);
+  const HandleFeature = async () => {
+    try {
+      const res = await Axios.get(`/product/?featured=${featured}`);
+      console.log(res);
+      if (res && res.data.success) {
+        setlist(res.data.message);
+      } else {
+        console.log(res.data);
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error("something went wrong");
+    }
+  };
 
+  useEffect(() => {
+    if (!featured) {
+      setlist(data);
+    }
+  }, [data, featured]);
+  useEffect(() => {
+    if (featured) {
+      HandleFeature();
+    }
+  }, [featured]);
   return (
     <>
       <Layout>
@@ -68,6 +88,7 @@ const Dashboard = () => {
                         onChange={(e) => {
                           setFeatured((c) => !c);
                         }}
+                        onClick={HandleFeature}
                       />
                       <label
                         className="form-check-label"
@@ -82,7 +103,7 @@ const Dashboard = () => {
             </div>
             <div className="col-9">
               <h1 className="my-4">All Products</h1>
-              <table class="table">
+              <table className="table">
                 <thead>
                   <tr>
                     <th scope="col">Serial Number</th>
@@ -96,9 +117,11 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((data, key) => (
+                  {list.map((data, key) => (
                     <tr>
-                      <th scope="row">{key + 1}</th>
+                      <th key={key} scope="row">
+                        {key + 1}
+                      </th>
                       <td className="text-capitalize">{data?.name}</td>
                       <td>{data?.price}</td>
                       <td>{data?.featured ? "Yes" : "No"}</td>
